@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transportutsläpp</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.plot.ly/plotly-3.5.1.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+<!-- NAV BAR -->
+    <nav class="navbar px-4 py-3">
+      <a class="navbar-brand-text" href="#" onclick="visaSida('hem')">
+        <img src="images/Logo.png" alt="Logotyp" height="60"/>
+      </a>
+
+<!-- HAMBURGERMENY - MOBIL -->
+      <button class ="hamburger" id="hamburger">
+        <i class="bi bi-list"></i>
+      </button>
+
+<!-- VANLIG NAVBAR - HELSKÄRM-->
+      <div id="navLinks" class="gap-3">
+        <a href="#" class="nav-link-custom active" data-page="hem">
+          <i class="bi bi-house-fill me-1"></i>Hem
+        </a>
+        <a href="#" class="nav-link-custom" data-page="statistik">
+          <i class="bi bi-bar-chart-fill me-1"></i>Statistik
+        </a>
+        <a href="#" class="nav-link-custom" data-page="karta">
+          <i class="bi bi-map-fill me-1"></i>Karta
+        </a>
+        <a href="#" class="nav-link-custom" data-page="om">
+          <i class="bi bi-info-circle-fill me-1"></i>Om projektet
+        </a>
+      </div>
+    </nav>
+
+<!-- STARTSIDA/HEMSIDA -->
+     <div id="page-hem" class="page active">
+      <div class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+          <source src="images/hero.hem.video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h1>Hur mycket påverkar våra resor klimatet?</h1>
+          <p>Varje dag rör vi oss mellan platser.<br>
+              Till jobbet. Skolan. Vänner. Semesterresor.<br>
+              Men bakom varje resa finns något vi sällan ser: ett klimatavtryck.
+          </p>
+        </div>
+    </div>
+    <div class="container-fluid">
+      
+<!-- FAKTARUTOR -->
+<div class="px-4 mt-5 mb-5">
+  <h4>Sveriges transportutsläpp i siffror</h4>
+  <p class="diagram-underrubrik">Klicka på korten för att lära dig mer</p>
+  <div class="row g-3" id="infoRutor">
+
+    <div class="col-lg-3 col-sm-6 info-kort">
+      <div class="info-wrap">
+          <div class="info-inner">
+              <div class="info-front">
+                  <i class="bi bi-wind"></i>
+                  <p class="info-titel">16 848 kt CO₂</p>
+              </div>
+              <div class="info-back">
+                  <p class="info-text">Sverige släppte ut 16 848 kiloton koldioxidekvivalenter från transporter år 2024</p>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div class="col-lg-3 col-sm-6 info-kort">
+      <div class="info-wrap">
+          <div class="info-inner">
+              <div class="info-front">
+                  <i class="bi bi-graph-down-arrow"></i>
+                  <p class="info-titel">-23%</p>
+              </div>
+              <div class="info-back">
+                  <p class="info-text">Sedan toppåret 2007 har Sveriges transportutsläpp minskat med 23%</p>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div class="col-lg-3 col-sm-6 info-kort">
+      <div class="info-wrap">
+          <div class="info-inner">
+              <div class="info-front">
+                  <i class="bi bi-car-front"></i>
+                  <p class="info-titel">35%</p>
+              </div>
+              <div class="info-back">
+                  <p class="info-text">Mer än en tredjedel av Sveriges totala växthusgasutsläpp kommer från transporter</p>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div class="col-lg-3 col-sm-6 info-kort">
+      <div class="info-wrap">
+          <div class="info-inner">
+              <div class="info-front">
+                  <i class="bi bi-bullseye"></i>
+                  <p class="info-titel">2030</p>
+              </div>
+              <div class="info-back">
+                  <p class="info-text">Sveriges officiella mål är att minska transportutsläppen med 70% till 2030 jämfört med 2010</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  </div>
+</div>
+
+<!-- TRENDEN -->
+<div class="px-4 mt-5 mb-5">
+  <div class="diagram-card">
+      <div class="row g-4 align-items-stretch">
+          
+<!--TEXT TILL DIAGRAMMET-->
+      <div class="col-lg-4 d-flex flex-column justify-content-center">
+        <h4 class="mt-2">Utsläppen minskar, men räcker det för att nå målen 2030?</h4>
+        <p>Sveriges transportutsläpp har minskat med <strong>23%</strong> sedan toppåret 2007. Men för att nå klimatmålet till 2030 behöver takten öka kraftigt.</p>
+        <button class="sektion-button" onclick="visaStatistikLasMer()">Utforska utsläppsstatistiken</button>
+      </div>
+
+
+<!-- DIAGRAMMET-->
+          <div class="col-lg-8">
+            <p class="diagram-underrubrik text-center">Totala transportutsläppen i Sverige</p>
+            <canvas id="transportLineHem" height="120"></canvas>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- GLOBALA MÅLEN -->
+<div class="px-4 mt-5 mb-5">
+  <div class="diagram-card">
+      <h4>Koppling till FN:s globala mål</h4>
+      <p>Transportsektorn utgör en ryggrad i det moderna samhället, men dess stora beroende av fossila bränslen gör att sektorn har en direkt och avgörande inverkan på flera av FN:s globala mål för hållbar utveckling. Genom att ställa om transportsystemet kan framsteg accelereras inom tre sammankopplade mål: </p>
+      
+      <div class="row g-3 mt-2">
+          
+          <!-- MÅL 13 -->
+          <div class="col-lg-4">
+              <div class="globalt-mal-card">
+                  <div class="globalt-mal-ikon" style="background:#387540;">13</div>
+                  <div>
+                      <h6>Klimatåtgärder</h6>
+                      <p class="globalt-mal-text">Små val som kan göra stor skillnad för klimatet</p>
+                      <button class="las-mer-knapp" onclick="lasMer(this)">
+                          <i class="bi bi-chevron-down me-1"></i>Läs mer
+                      </button>
+                      <div class="las-mer-innehall" style="display:none;">
+                          <p>Varje gång vi kör bil, flyger eller tar båten bidrar vi till växthusgasutsläpp som värmer upp vår planet. I Sverige kommer ca 35% av alla utsläpp från transportsektorn. FN:s globala mål 13 handlar om att vidta omedelbara åtgärder mot klimatförändringarna. En av de viktigaste åtgärderna är att ställa om hur vi reser.<br><br>Sverige har som mål att minska transportutsläppen med 70% till 2030 jämfört med 2010. Men utvecklingen går långsamt. Utsläppen måste minska mycket snabbare för att målen ska nås.<br><br>Det börjar med vardagliga val. Att samåka, välja kollektivtrafik eller cykla är enkla sätt att göra skillnad. Varje resa räknas.
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- MÅL 11 -->
+          <div class="col-lg-4">
+              <div class="globalt-mal-card">
+                  <div class="globalt-mal-ikon" style="background:#fc8f3a;">11</div>
+                  <div>
+                      <h6>Hållbara städer</h6>
+                      <p class="globalt-mal-text">Din resa påverkar staden du bor i</p>
+                      <button class="las-mer-knapp" onclick="lasMer(this)">
+                          <i class="bi bi-chevron-down me-1"></i>Läs mer
+                      </button>
+                      <div class="las-mer-innehall" style="display:none;">
+                          <p>Visste du att hur en stad är byggd påverkar hur mycket folk kör bil?<br>I städer med bra kollektivtrafik och cykelvägar reser folk mer hållbart. Inte för att de måste, utan för att det är enklast.<br><br>Det handlar om hur nära vi bor jobbet, skolan och affären. Om det finns bussar som faktiskt går när vi behöver dom och om det känns tryggt att cykla där vi bor.<br><br>Hållbara städer byggs inte av en person. De växer fram när fler väljer att resa smartare och när vi tillsammans skapar efterfrågan på bättre alternativ.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- MÅL 3 -->
+          <div class="col-lg-4">
+              <div class="globalt-mal-card">
+                  <div class="globalt-mal-ikon" style="background:#fbba3a;">7</div>
+                  <div>
+                      <h6>Hållbar energi</h6>
+                      <p class="globalt-mal-text">Ladda bilen med grön el</p>
+                      <button class="las-mer-knapp" onclick="lasMer(this)">
+                          <i class="bi bi-chevron-down me-1"></i>Läs mer
+                      </button>
+                      <div class="las-mer-innehall" style="display:none;">
+                          <p>FN:s mål 7 handlar om att alla ska ha tillgång till hållbar och förnybar energi. Det är direkt kopplat till hur vi väljer att resa. Ju mer vi elektrifierar transporter och laddar med grön el, desto närmare kommer vi målet.<br><br>Varje gång du väljer elbuss,eltåg eller elbil bidrar du till en renare energiframtid.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+  </div>
+</div>
+
+
+<!-- SEKTION KARTA-->
+      <div class="px-4 mb-5">
+        <div class="diagram-card">
+          <div class="row g-5 align-items-start">
+            <div class="col-lg-6">
+              <img src="images/road.jpg" alt="Beskrivning" class="sektion-bild-1"/>
+            </div>
+            <div class="col-lg-6">
+              <h2>Rubrik</h2>
+              <p class="sektion-text">Beskrivande text här</p>
+              <button class="sektion-button" onclick="visaSida('karta')">Utforska Europa-kartan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+<!-- STATISTIK SIDA-->
+    <div id="page-statistik" class="page">
+        <div class="hero-undersida hero-statistik">
+            <div class="hero-undersida-content">
+                <h1>Varje resa lämnar ett avtryck</h1>
+                <p>Här kan du följa utsläppstrenderna över tid, se hur olika fordonstyper påverkar klimatet och förstå varför personbilar dominerar vägtrafikens utsläpp.</p>
+            </div>
+        </div>
+
+        <div class="container-fluid py-5 px-4">
+<!-- LINJE DIAGRAM, TOTALA TRANSPORTUTSLÄPP-->
+        <div class="row g-4 mb-5">
+          <div class="col-lg-12">
+            <div class="diagram-card">
+              <h4>Totala transportutsläpp i Sverige 2007–2024</h4>
+              <p class="diagram-underrubrik">Sveriges transportutsläpp har minskat med cirka 23% sedan 2007</p>
+              <canvas id="transportLine" height="120"></canvas>
+
+              <!-- LÄS MER-->
+              <button class="las-mer-knapp" onclick="lasMer(this)">
+                <i class="bi bi-chevron-down me-1"></i>Läs mer
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p>Transportsektorns utsläpp förändras varje år beroende på hur vi reser, vilka drivmedel som används och hur samhället utvecklas.</p>
+                <p>Under lång tid har vägtrafiken stått för den största delen av transporternas klimatpåverkan, men även flyg och sjöfart bidrar kraftigt till de totala utsläppen. Samtidigt visar utvecklingen att elektrifiering, kollektivtrafik och effektivare transporter kan minska utsläppen över tid.</p>
+                <p>Diagrammet ger en bild om hur snabbt förändringen behöver gå för att klimatmålen ska kunna nås. Efter en längre period där transportsektorns utsläpp successivt minskat syns en tydlig ökning mellan 2023 och 2024. Denna utveckling kan till stor del kopplas till förändringar inom svensk drivmedelspolitik och transportsektorns fortsatta beroende av fossila bränslen.</p>
+                <p>En central faktor bakom ökningen är förändringen av reduktionsplikten under 2024. I rapporten <em>Transportrelaterade utsläpp av växthusgaser för godstransporter i Sverige</em> beskrivs hur reduktionsplikten sänktes från 30,5% för diesel och 7,8% för bensin till endast 6% för båda bränslen. Reduktionsplikten innebär att fossila drivmedel blandas ut med biodrivmedel för att minska de totala utsläppen av växthusgaser. När andelen biodrivmedel minskar ökar den fossila andelen i drivmedlen, vilket direkt leder till högre utsläpp från vägtrafiken. Eftersom vägtransporter redan står för den största delen av transportsektorns klimatpåverkan får sådana förändringar stor effekt på den totala utsläppsstatistiken. Rapporten visar att vägtransportsektorn står för omkring 94% av de direkta utsläppen från inrikes transporter i Sverige (Oscott m.fl., 2021).</p>
+                <p>Utvecklingen illustrerar även ett bredare problem – transportsektorn är fortfarande starkt beroende av fossila energikällor trots den pågående omställningen mot elektrifiering och förnybara drivmedel. I forskningsöversikten <em>Transportsektorns klimatpåverkan ur ett livscykelperspektiv</em> betonas att tekniska förbättringar och nya drivmedel är viktiga, men att de inte ensamma räcker för att minska utsläppen i den takt som klimatmålen kräver.</p>
+              </div>
+              <!-- REFERENSER -->
+              <button class="las-mer-knapp" onclick="visaKallor(this)">
+                <i class="bi bi-chevron-down me-1"></i>Källor & referenser
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p>
+                  <strong>Datakälla:</strong><br>
+                  <a href="#" onclick="öppnaLänk('https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__MI__MI0107/MI0107InTranspNN/')">SCB - Utsläpp från inrikes transporter</a>
+                </p>
+                <p>
+                  <strong>Referens:</strong><br>
+                  <p>Holmgren, K., Chen, B. H., Wickman, C., Hansson, J., Malmgren, E., Olsson, M., & Lundblad, M. (2025). <em>Transportrelaterade utsläpp av växthusgaser för godstransporter i Sverige: Nutid och scenarier under omställning för att nå klimatmål</em> (Slutrapport Triple F 2022.5.2.3). RISE & IVL.</p>
+                  <p>Liu, C., Susilo, Y. O., & Karlström, A. (2016). Estimating changes in transport CO2 emissions due to changes in weather and climate in Sweden. <em>Transportation Research Part D: Transport and Environment</em>, <em>49</em>, 172–187.</p>
+                  <p>Lund, E., & Sundberg, I. (2016). <em>Transportsektorns klimatpåverkan ur ett livscykelperspektiv: En forskningsöversikt</em> (Trivector Rapport 2016:84). Trivector.</p>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+<!-- TRANSPORT VS ÖVRIGA UTSLÄPP, DONUT-->
+        <div class="row g-4 mb-5">
+          <div class="col-lg-12">
+            <div class="diagram-card">
+              <h4>Transporter står för ca 35% av Sveriges klimatutsläpp</h4>
+              <p class="diagram-underrubrik">Jämförelse mellan transportsektorn och övriga utsläppskällor år 2023</p>
+              <div style="height: 400px; max-width: 600px; margin: 0 auto;">
+                <canvas id="transportDonut"></canvas>
+              </div>
+
+              <!-- LÄS MER-->
+              <button class="las-mer-knapp" onclick="lasMer(this)">
+                <i class="bi bi-chevron-down me-1"></i>Läs mer
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p>En stor del av samhällets växthusgasutsläpp kommer från hur människor och varor förflyttas varje dag. Bilar, lastbilar, flyg och fartyg använder enorma mängder energi, vilket gör transportsektorn till en av de största utsläppskällorna både i Sverige och globalt.</p>
+                <p>Samtidigt kommer utsläpp också från industrier, energiproduktion, jordbruk och bygge. För att förstå transporternas verkliga påverkan behöver man därför jämföra dem med resten av samhällets utsläpp.</p>
+                <p>Diagrammet visar hur stor del av de totala utsläppen som kommer från transporter jämfört med andra sektorer.</p>
+                <p>År 2023 utgjorde transportsektorn en av de absolut största enskilda källorna till direkta växthusgasutsläpp i Sverige. De utsläppsnivåer som registreras under ett enskilt år är dock inte statiska, utan påverkas av kortsiktiga yttre faktorer. Liu et al. (2016) visar att årliga variationer i väder och klimat har en direkt inverkan på transportsektorns utsläppsdata. Siffrorna för 2023 reflekterar därför inte bara ekonomisk aktivitet, utan också hur specifika väderförhållanden under året (såsom kalla vintermånader eller nederbörd) har påverkat fordons bränsleförbrukning och invånarnas val av transportmedel.</p>
+                <p>Den jämförelse som presenteras i diagrammet baseras på sektorns direkta utsläpp under 2023 (det som släpps ut under själva körningen). Lund och Sundberg (2016) understryker dock att en sådan traditionell sektoruppdelning riskerar att underblåsa transportsektorns totala klimatavtryck. Om man istället tillämpar en livscykelanalys (LCA) flyttas en del av de utsläpp som i diagrammet tillskrivs "övriga utsläppskällor" (exempelvis industriproduktion av stål och betong) till transportsektorn, eftersom materialen används för att bygga och underhålla transportinfrastruktur (Lund & Sundberg, 2016).</p>
+              </div>
+              <!-- REFERENSER -->
+              <button class="las-mer-knapp" onclick="visaKallor(this)">
+                <i class="bi bi-chevron-down me-1"></i>Källor & referenser
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p class="diagram-kalla">
+                  <strong>Datakälla:</strong><br> 
+                  <a href="#" onclick="öppnaLänk('https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__MI__MI0107/MI0107InTranspNN/')">SCB - Utsläpp från inrikes transporter</a><br>
+                  <a href="#" onclick="öppnaLänk('https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__MI__MI0107/TotaltUtslappN/')">SCB - Totala utsläpp</a>
+                </p>
+                <p>
+                  <strong>Referens:</strong><br>
+                  <p>Holmgren, K., Chen, B. H., Wickman, C., Hansson, J., Malmgren, E., Olsson, M., & Lundblad, M. (2025). <em>Transportrelaterade utsläpp av växthusgaser för godstransporter i Sverige: Nutid och scenarier under omställning för att nå klimatmål</em> (Slutrapport Triple F 2022.5.2.3). RISE & IVL.</p>
+                  <p>Liu, C., Susilo, Y. O., & Karlström, A. (2016). Estimating changes in transport CO2 emissions due to changes in weather and climate in Sweden. <em>Transportation Research Part D: Transport and Environment</em>, <em>49</em>, 172–187.</p>
+                  <p>Lund, E., & Sundberg, I. (2016). <em>Transportsektorns klimatpåverkan ur ett livscykelperspektiv: En forskningsöversikt</em> (Trivector Rapport 2016:84). Trivector.</p>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+<!-- TRANSPORTUTSLÄPP PER TRANSPORTSLAG-->
+        <div class="row g-4 mb-5">
+          <div class="col-lg-6">
+            <div class="diagram-card">
+              <h4>Vägtrafiken dominerar Sveriges transportutsläpp</h4>
+              <p class="diagram-underrubrik">Jämförelse av utsläpp mellan olika transportslag år 2023</p>
+              <canvas id="transportslagChart"></canvas>
+
+              <!-- LÄS MER-->
+              <button class="las-mer-knapp" onclick="lasMer(this)">
+                <i class="bi bi-chevron-down me-1"></i>Läs mer
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p>Alla transportmedel påverkar klimatet, men inte i samma utsträckning.</p>
+                <p>Diagrammet visar hur stora utsläppen från olika transportslag var under 2023. Det blir tydligt att vägtrafiken står för den absolut största delen av transportsektorns klimatpåverkan, medan järnvägen har mycket låga utsläpp i jämförelse.</p>
+                <p>Skillnaderna beror bland annat på hur många människor eller varor som transporteras, vilken energi som används och hur energieffektivt transportmedlet är.</p>
+                <p>Genom att förstå vilka transporter som släpper ut mest blir det också lättare att se var förändringar kan göra störst skillnad för klimatet.</p>
+                <p>Men det finns även en intressant aspekt att ta upp – väderlekens påverkan. Enligt forskning av Liu et al. (2016) är transportrelaterade koldioxidutsläpp i Sverige nära sammankopplade med rådande väder och klimat. Siffrorna för 2023 speglar därför hur årets specifika temperaturer, vindförhållanden och nederbörd har påverkat dels människors val av färdmedel (exempelvis att välja bilen framför aktiva transporter), dels fordonens faktiska bränsleförbrukning på grund av ökat rull- och luftmotstånd under kalla eller nederbördsrika månader (Liu et al., 2016).</p>
+                <p>Det aktuella diagrammet fångar en specifik tidpunkt (år 2023), vilket i forskningssammanhang fungerar som ett viktigt referensår för att mäta framsteg. Holmgren et al. (2025) beskriver de nödvändiga utvecklingslinjerna och scenarierna för att Sverige ska nå sina klimatmål till åren 2030 och 2045, särskilt inom godstransporter. I takt med att fordonsflottan elektrifieras och biobränslen fasas in förväntas transportsektorns andel i detta diagram att krympa avsevärt under de kommande decennierna. Detta innebär samtidigt att utsläppstyngdpunkten flyttas till produktionen, vilket kräver att framtida fordon tillverkas med fossilfritt stål och batterier producerade med grön el för att den totala klimatpåverkan ska minska (Holmgren et al., 2025).</p>
+              </div>
+              <!-- REFERENSER -->
+              <button class="las-mer-knapp" onclick="visaKallor(this)">
+                <i class="bi bi-chevron-down me-1"></i>Källor & referenser
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p class="diagram-kalla">
+                  <strong>Datakälla:</strong><br>
+                  <div class="kalla-länkar">
+                    <a href="#" onclick="öppnaLänk('https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__MI__MI0107/MI0107InTranspNN/')">SCB - Utsläpp från inrikes transporter</a>
+                  </div>
+                </p>
+                <p>
+                  <strong>Referens:</strong><br>
+                  <p>Holmgren, K., Chen, B. H., Wickman, C., Hansson, J., Malmgren, E., Olsson, M., & Lundblad, M. (2025). <em>Transportrelaterade utsläpp av växthusgaser för godstransporter i Sverige: Nutid och scenarier under omställning för att nå klimatmål</em> (Slutrapport Triple F 2022.5.2.3). RISE & IVL.</p>
+                  <p>Liu, C., Susilo, Y. O., & Karlström, A. (2016). Estimating changes in transport CO2 emissions due to changes in weather and climate in Sweden. <em>Transportation Research Part D: Transport and Environment</em>, <em>49</em>, 172–187.</p>
+                  <p>Lund, E., & Sundberg, I. (2016). <em>Transportsektorns klimatpåverkan ur ett livscykelperspektiv: En forskningsöversikt</em> (Trivector Rapport 2016:84). Trivector.</p>
+                </p>
+              </div>
+            </div>
+          </div>
+<!-- VÄGTRAFIK UTSLÄPP-->
+          <div class="col-lg-6">
+            <div class="diagram-card">
+              <h4>Personbilar är vägtrafikens största klimatbov</h4>
+              <p class="diagram-underrubrik">Fördelning av utsläpp per fordonstyp inom vägtrafiken år 2023</p>
+              <canvas id="vagtrafikChart"></canvas>
+
+              <!-- LÄS MER-->
+              <button class="las-mer-knapp" onclick="lasMer(this)">
+                <i class="bi bi-chevron-down me-1"></i>Läs mer
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p>Diagrammet visar hur utsläppen från olika typer av vägfordon fördelades under 2023. Personbilar står för den största delen av utsläppen, vilket inte är så konstigt eftersom de används varje dag av miljontals människor. Samtidigt bidrar även lastbilar och andra fordon till en stor del av klimatpåverkan från vägtrafiken.</p>
+                <p>Skillnaderna mellan fordonstyperna beror bland annat på hur många fordon som används, hur långt de kör, vilken typ av bränsle de använder och hur mycket energi som krävs för att driva dem.</p>
+                <p>De utsläppsnivåer som registreras för de olika fordonstyperna under 2023 är till viss del påverkade av yttre miljöfaktorer. Liu et al. (2016) belyser att förändringar i väder och klimat påverkar fordonstyper på olika sätt. Exempelvis brukar dåligt väder (såsom kyla och nederbörd) kunna förändra människors resebeteende, vilket ofta ökar användningen av personbilar framför cykel eller kollektivtrafik och i sin tur höjer personbilarnas stapel i diagrammet. För tunga fordon påverkar vädret istället utsläppen mer direkt genom förändrat rull- och luftmotstånd under körning, vilket ökar bränsleförbrukningen per körd kilometer under vintermånaderna (Liu et al., 2016).</p>
+                <p>Detta diagram är baserat på de direkta utsläppen under körning för år 2023. Lund och Sundberg (2016) poängterar dock att en livscykelanalys (LCA) ger en mer rättvis helbild av fordonstypernas verkliga klimatpåverkan. Om man inkluderar de indirekta utsläppen – tillverkningen av fordonen, batteriproduktionen och utvinningen av råmaterial – förändras tyngdpunkten. Tyngre fordon och mer materialintensiva fordonstyper får då i ett livscykelperspektiv en större klimatskuld som inte syns om man enbart mäter avgasutsläppen i en sådan här årlig sammanställning.</p>
+                <p>Medan personbilsflottan har kommit relativt långt i sin elektrifiering befinner sig de tunga lastbilarna i början av sin omställning. För att minska de tunga fordonens staplar i framtiden krävs inte bara eldrift, utan enligt rapporten även strategiska industrisatsningar som att introducera fossilfritt stål i lastbilstillverkningen och att producera batterier med förnybar energi (Holmgren et al., 2025).</p>
+              </div>
+
+              <!-- REFERENSER -->
+              <button class="las-mer-knapp" onclick="visaKallor(this)">
+                <i class="bi bi-chevron-down me-1"></i>Källor & referenser
+              </button>
+              <div class="las-mer-innehall" style="display:none;">
+                <p class="diagram-kalla">
+                  <strong>Datakälla:</strong><br>
+                  <div class="kalla-länkar">
+                    <a href="#" onclick="öppnaLänk('https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__MI__MI0107/MI0107InTranspNN/')">SCB - Utsläpp från inrikes transporter</a>
+                  </div>
+                </p>
+                <p>
+                  <strong>Referens:</strong><br>
+                  <p>Holmgren, K., Chen, B. H., Wickman, C., Hansson, J., Malmgren, E., Olsson, M., & Lundblad, M. (2025). <em>Transportrelaterade utsläpp av växthusgaser för godstransporter i Sverige: Nutid och scenarier under omställning för att nå klimatmål</em> (Slutrapport Triple F 2022.5.2.3). RISE & IVL.</p>
+                  <p>Liu, C., Susilo, Y. O., & Karlström, A. (2016). Estimating changes in transport CO2 emissions due to changes in weather and climate in Sweden. <em>Transportation Research Part D: Transport and Environment</em>, <em>49</em>, 172–187.</p>
+                  <p>Lund, E., & Sundberg, I. (2016). <em>Transportsektorns klimatpåverkan ur ett livscykelperspektiv: En forskningsöversikt</em> (Trivector Rapport 2016:84). Trivector.</p>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- KARTA SIDA-->
+<div id="page-karta" class="page">
+    <div class="hero-undersida hero-karta">
+        <div class="hero-undersida-content">
+            <h1>Karta</h1>
+            <p>Hur ligger Sverige till jämför med resten av Europa?</p>
+        </div>
+    </div>
+  <div class="container-fluid py-5 px-4">
+      <div class="diagram-card">
+          <h4>Transportutsläpp per land i Europa 2022</h4>
+          <p class="diagram-underrubrik">Växthusgasutsläpp från bränsleförbränning inom transportsektorn, tusen ton CO₂-ekv.</p>
+          <div id="kartaDiagram"></div>
+                  
+          <!-- LÄS MER-->
+          <button class="las-mer-knapp" onclick="lasMer(this)">
+              <i class="bi bi-chevron-down me-1"></i>Läs mer
+          </button>
+          <div class="las-mer-innehall" style="display:none;">
+                <p>Kartan ger en visuell översikt av hur transportrelaterade utsläpp fördelade sig i Europa år 2022. Enligt officiell statistik från Europaparlamentet (2024) står transporter för ungefär en fjärdedel av EU:s totala koldioxidutsläpp, varav vägtransporterna dominerar stort och står för hela 71,7 procent av dessa utsläpp. Skillnaderna i utsläppsmängd mellan länderna på kartan speglar hur denna utmaning ser ut i praktiken.</p>
+                <p>De utsläppsnivåer som registreras i de olika europeiska länderna påverkas i hög grad av lokala klimat- och miljöfaktorer. Forskning av Liu et al. (2016) visar att regionala väderförhållanden och temperaturer har en mätbar effekt på transportsektorns koldioxidutsläpp. I kalla nordeuropeiska regioner kan exempelvis lägre temperaturer och nederbörd under vinterhalvåret öka fordonens rullmotstånd och bränsleförbrukning, samtidigt som dåligt väder minskar andelen aktiva transporter (exempelvis gång och cykling). Detta kan skapa geografiska skillnader i statistiken som direkt speglas i kartan (Liu et al., 2016).</p>
+                <h6>Vad kan vi göra för att förbättra utvecklingen?</h6>
+                <p>Utsläppsmönstren på kartan för år 2022 är nära länkade till kontinentens gemensamma handelsrutter och transittrafik. Europaparlamentet (2024) betonar att EU har som mål att minska växthusgasutsläppen från transporter med 90 procent till år 2050 jämfört med 1990. För att länderna på kartan ska kunna röra sig mot detta mål krävs de typer av konkreta omställningsscenarier för tunga transporter som Holmgren et al. (2025) beskriver, fast på hel europeisk skala. Ett storskalat införande av förnybara drivmedel i hela unionen är avgörande för att bryta den historiska trenden och uppnå ett klimatneutralt Europa (Holmgren et al., 2025).</p>
+            </div>
+
+          <!-- REFERENSER -->
+          <button class="las-mer-knapp" onclick="visaKallor(this)">
+              <i class="bi bi-chevron-down me-1"></i>Källor & referenser
+          </button>
+          <div class="las-mer-innehall" style="display:none;">
+              <p>
+                  <strong>Datakälla:</strong><br>
+                    <a href="#" onclick="öppnaLänk('https://ec.europa.eu/eurostat/databrowser/view/env_air_gge/default/table?lang=en')">Eurostat – Greenhouse gas emissions by source sector (env_air_gge)</a>
+              </p>
+              <p><strong>Referens:</strong><br>
+                <p>Europaparlamentet. (2024, 9 december). <em>Koldioxidutsläpp från bilar i siffror (nyhetsgrafik)</em> (Artikel 20190313STO31218). Generaldirektoratet för kommunikation.</p>
+                <p>Holmgren, K., Chen, B. H., Wickman, C., Hansson, J., Malmgren, E., Olsson, M., & Lundblad, M. (2025). <em>Transportrelaterade utsläpp av växthusgaser för godstransporter i Sverige: Nutid och scenarier under omställning för att nå klimatmål</em> (Slutrapport Triple F 2022.5.2.3). RISE & IVL.</p>
+                <p>Liu, C., Susilo, Y. O., & Karlström, A. (2016). Estimating changes in transport CO2 emissions due to changes in weather and climate in Sweden. <em>Transportation Research Part D: Transport and Environment</em>, <em>49</em>, 172–187.</p>
+                <p>Lund, E., & Sundberg, I. (2016). <em>Transportsektorns klimatpåverkan ur ett livscykelperspektiv: En forskningsöversikt</em> (Trivector Rapport 2016:84). Trivector.</p>
+              </p>
+          </div>      
+      </div>
+  </div>
+</div>
+
+
+<!-- OM PROJEKTET SIDA-->
+<div id="page-om" class="page">
+  <div class="container-fluid py-5 px-4">
+
+      <div class="row g-4">
+
+          <!-- OM PROJEKTET -->
+          <div class="col-lg-12">
+              <div class="diagram-card">
+                <h4>Om Transportutsläpp</h4><br>
+                <h6>Visualisering av transportsystemets klimatomställning</h6>
+                <p>Transportsektorn befinner sig mitt i sin största omställning i modern tid, och genom denna plattform vill vi ge besökaren verktygen att själv utforska hur vägen mot ett fossilfritt samhälle ser ut.</p><br>
+                
+                <h6>Vårt syfte</h6>
+                <p>Idag står transporter för cirka 35% av Sveriges totala växthusgasutsläpp, där vägtrafiken och i synnerhet personbilar utgör den största utmaningen. För att vi ska kunna nå de internationella klimatmålen krävs en djupare förståelse för hur utsläppen hänger ihop. Vårt syfte är att synliggöra denna dynamik. Genom interaktiva verktyg och visualiseringar kan besökaren följa utvecklingen från år 2007 fram till idag, samt analysera hur utsläppen fördelar sig mellan olika fordonstyper.</p>
+              </div>
+          </div>
+
+          <!-- GRUPPEN -->
+          <div class="col-lg-12">
+              <div class="diagram-card">
+                  <h4>Vilka är vi?</h4>
+                  <p>Vi är tre studenter från Högskolan Dalarna som vill väcka intresse för transportutsläpp och dess miljöpåverkan. Genom att ha tagit fram relevant data och akademiska källor har vi skapat en hemsida där du som individ kan läsa mer om de eventuella utsläppen du bidrar med till klimatavtrycket i Sverige. Vi vill kunna ge dig möjligheten att känna dig informerad om ämnet, och kunna göra klimatsmarta val för att hjälpa oss alla nå de globala målen för hållbar utveckling.</p>
+                  <div class="d-flex gap-4 flex-wrap mt-3">
+                      <div class="om-person">
+                        <i class="bi bi-person-circle om-avatar-ikon"></i>
+                        <p>Oscar Nilsson Ljungdell</p>
+                      </div>
+                      <div class="om-person">
+                        <i class="bi bi-person-circle om-avatar-ikon"></i>
+                        <p>Omar Hussain</p>
+                      </div>
+                      <div class="om-person">
+                        <i class="bi bi-person-circle om-avatar-ikon"></i>
+                        <p>Sandra Eriksson</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- KÄLLOR -->
+          <div class="col-lg-12">
+              <div class="diagram-card">
+                  <h4>Källor & referenser</h4><br>
+
+                  <h6>Datakällor</h6>
+                  <div class="d-flex flex-column gap-2 mb-5">
+                      <a href="#" onclick="öppnaLänk('https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__MI__MI0107/MI0107InTranspNN/')" class="om-kalla">SCB – Utsläpp från inrikes transporter</a>
+                      <a href="#" onclick="öppnaLänk('https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__MI__MI0107/TotaltUtslappN/')"class="om-kalla">SCB – Totala utsläpp</a>
+                      <a href="#" onclick="öppnaLänk('https://ec.europa.eu/eurostat/databrowser/view/env_air_gge/default/table?lang=en')" class="om-kalla">Eurostat – Greenhouse gas emissions by source sector</a>
+                  </div>
+
+                  <h6>Referenser</h6>
+                  <div class="d-flex flex-column gap-2 mb-5">
+                      <a href="#" onclick="öppnaLänk('https://www.naturvardsverket.se/amnesomraden/klimatomstallningen/sveriges-klimatarbete/sveriges-klimatmal-och-klimatpolitiska-ramverk/')" class="om-kalla">Naturvårdsverket – Sveriges klimatmål</a>
+                      <a href="#" onclick="öppnaLänk('https://globalamalen.se')" class="om-kalla">globalamalen.se – FN:s globala mål</a>
+                  </div>
+
+                  <h6>Vetenskapliga referenser</h6>
+                  <div class="d-flex flex-column gap-2 mb-5">
+                      <p class="om-kalla-text">Holmgren, K., Chen, B. H., Wickman, C., Hansson, J., Malmgren, E., Olsson, M., & Lundblad, M. (2025). <em>Transportrelaterade utsläpp av växthusgaser för godstransporter i Sverige: Nutid och scenarier under omställning för att nå klimatmål</em> (Slutrapport Triple F 2022.5.2.3). RISE & IVL.</p>
+                      <p class="om-kalla-text">Liu, C., Susilo, Y. O., & Karlström, A. (2016). Estimating changes in transport CO2 emissions due to changes in weather and climate in Sweden. <em>Transportation Research Part D: Transport and Environment</em>, <em>49</em>, 172–187.</p>
+                      <p class="om-kalla-text">Lund, E., & Sundberg, I. (2016). <em>Transportsektorns klimatpåverkan ur ett livscykelperspektiv: En forskningsöversikt</em> (Trivector Rapport 2016:84). Trivector.</p>
+                      <p class="om-kalla-text">Europaparlamentet. (2024, 9 december). <em>Koldioxidutsläpp från bilar i siffror (nyhetsgrafik)</em> (Artikel 20190313STO31218). Generaldirektoratet för kommunikation.</p>
+                  </div>
+                  <h6>Bilder & video</h6>
+                  <div class="d-flex flex-column gap-2 mb-5">
+                    <a href="#" onclick="öppnaLänk('https://www.pexels.com/video/aerial-view-of-a-winding-road-in-the-mountains-26562898/')" class="om-kalla">Pexels – Flygbild över slingrande bergsväg (framsidan)</a>
+                      <a href="#" onclick="öppnaLänk('https://www.pexels.com/sv-se/foto/vag-manniskor-cyklar-utomhus-5807581/')" class="om-kalla">Pexels – Cyklister på väg (statistiksidan)</a>
+                      <a href="#" onclick="öppnaLänk('https://www.pexels.com/sv-se/foto/bilar-vag-trafik-nederlanderna-14218850/')" class="om-kalla">Pexels – Bilar på väg (kartsidan)</a>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+  </div>
+</div>
+
+<!-- TILL TOPPEN KNAPP-->
+    <button class="till-toppen" id="tillToppen">
+      <i class="bi bi-arrow-up"></i>
+    </button>
+
+<!-- FOOTER-->
+    <footer>
+      <p>© Transportutsläpp</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
